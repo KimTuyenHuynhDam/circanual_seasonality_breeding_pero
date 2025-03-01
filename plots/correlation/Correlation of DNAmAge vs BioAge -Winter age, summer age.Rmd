@@ -1,0 +1,60 @@
+---
+title: "Correlation of DNAmAge vs BioAge -Winter age, summer age"
+author: "Kim-Tuyen Huynh-Dam"
+date: "2023-11-20"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+```{r, message=FALSE, echo=TRUE, warning=FALSE}
+library(readxl)
+library(dplyr)
+library(lubridate)
+library(tidyverse)
+library(broom)
+library(tibble)
+
+id = read_xlsx("all tails -summer, winter age.xlsx")
+
+
+####All tails
+win_lm =lm(Winter_age ~ DNAmAgeLOO, data=id)
+sum_lm =lm(Summer_age ~ DNAmAgeLOO, data=id)
+
+ggplot(data=id) + geom_point(aes(y=Winter_age, x=DNAmAgeLOO, col='Winter age')) + geom_point(aes(y=Summer_age, x=DNAmAgeLOO, col='Summer age')) +
+geom_abline(slope = coef(sum_lm)[["DNAmAgeLOO"]],intercept = coef(sum_lm)[["(Intercept)"]], col='blue', linewidth=1) +
+geom_abline(slope = coef(win_lm)[["DNAmAgeLOO"]],intercept = coef(win_lm)[["(Intercept)"]], col = 'red', linewidth=1) + ylab('Age') + xlab('DNAmAgeLOO') +  
+  theme_minimal() + scale_color_manual(name='', values = c('blue', 'red')) + ylim(0, 2.2) +xlim(-0.25, 3)
+
+
+
+
+
+### polygamous
+id_poly = id %>% filter(Monogamous =="no")
+p_win_lm =lm(Winter_age  ~ DNAmAgeLOO, data=id_poly)
+p_sum_lm =lm(Summer_age ~ DNAmAgeLOO , data=id_poly)
+
+ggplot(data=id_poly) + geom_point(aes(y=Winter_age, x=DNAmAgeLOO, col='Winter age')) + geom_point(aes(y=Summer_age, x=DNAmAgeLOO, col='Summer age')) +
+geom_abline(slope = coef(p_sum_lm)[["DNAmAgeLOO"]],intercept = coef(p_sum_lm)[["(Intercept)"]], col='blue', linewidth=1) +
+geom_abline(slope = coef(p_win_lm)[["DNAmAgeLOO"]],intercept = coef(p_win_lm)[["(Intercept)"]], col = 'red', linewidth=1) + ylab('Age') + xlab('DNAmAgeLOO') +  
+  theme_minimal() + scale_color_manual(name='', values = c('blue', 'red')) + ylim(0, 2.2) +xlim(-0.25, 3)
+
+round(cor(id_poly$Summer_age, id_poly$DNAmAgeLOO),2)
+round(cor(id_poly$Winter_age, id_poly$DNAmAgeLOO),2)
+### monogamous
+id_mono = id %>% filter(Monogamous == "yes")
+
+m_win_lm =lm(Winter_age ~ DNAmAgeLOO, data=id_mono)
+m_sum_lm =lm(Summer_age ~ DNAmAgeLOO, data=id_mono)
+
+ggplot(data=id_mono) + geom_point(aes(y=Winter_age, x=DNAmAgeLOO, col='Winter age')) + geom_point(aes(y=Summer_age, x=DNAmAgeLOO, col='Summer age')) +
+  geom_abline(slope = coef(m_sum_lm)[["DNAmAgeLOO"]],intercept = coef(m_sum_lm)[["(Intercept)"]], col='blue', linewidth=1) +
+  geom_abline(slope = coef(m_win_lm)[["DNAmAgeLOO"]],intercept = coef(m_win_lm)[["(Intercept)"]], col = 'red', linewidth=1) + ylab('Age') + xlab('DNAmAgeLOO') +  
+  theme_minimal() + scale_color_manual(name='', values = c('blue', 'red')) + ylim(0, 2.2) +xlim(-0.25, 3)
+
+round(cor(id_mono$Summer_age, id_mono$DNAmAgeLOO),2)
+round(cor(id_mono$Winter_age, id_mono$DNAmAgeLOO),2)
+
+```

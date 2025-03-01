@@ -1,0 +1,40 @@
+---
+title: "scatterplot - p-value rank of CpGs -birthseasom - poly vs mono"
+author: "Kim-Tuyen Huynh-Dam"
+date: "2023-11-20"
+output: html_document
+---
+
+
+```{r, message=FALSE, echo=TRUE, warning=FALSE}
+library(readxl)
+library(dplyr)
+library(lubridate)
+library(tidyverse)
+library(broom)
+library(tibble)
+
+
+met = read_xlsx("p-value mono, poly.xlsx")
+
+####top 10% of most significant CpGs
+
+met_10percent = met[1:round(nrow(met)*0.1,0),]
+
+ggplot(data=met_10percent, aes(x=CGnum, y=Polygamous)) + geom_point(size=1,aes(col ='Polygamous species')) +
+geom_point(size=0.5,aes(x=CGnum, y=Monogamous, col='Monogamous species')) +
+xlab('') + ylab('-Log10(p value)') +  theme_minimal() +
+scale_color_manual(name='Species', values = c('red', 'blue')) +
+theme(axis.text.x=element_blank(),axis.ticks.x=element_blank())
+
+####top 250 of most significant CpGs
+
+met_250 = met[1:250,]
+
+ggplot(data=met_250, aes(x=CGnum, y=Polygamous)) + geom_point(size=1,aes(col ='Polygamous species')) +
+geom_point(size=0.5,aes(x=CGnum, y=Monogamous, col='Monogamous species')) +
+xlab('') + ylab('-Log10(p value)') +  theme_minimal() +
+scale_color_manual(name='Species', values = c('red', 'blue')) +
+theme(axis.text.x=element_blank(),axis.ticks.x=element_blank())
+```
+

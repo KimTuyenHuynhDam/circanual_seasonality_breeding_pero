@@ -1,0 +1,26 @@
+---
+title: "heatmap of top CpGs in polygamous species"
+author: Kim-Tuyen Huynh-Dam
+output: html_document
+date: "2023-11-20"
+---
+
+```{r, message=FALSE, echo=TRUE, warning=FALSE}
+library(tidyverse)
+library(ggplot2)
+library(RColorBrewer)
+library(gplots)
+library(readxl)
+
+met = read_xlsx("ProMet of poly (logp more than 3) in tails - winter collection.xlsx")
+
+
+poly_met = met %>% select(matches("CG|BW|SM2|LL")) 
+poly_met = poly_met%>% column_to_rownames(var='CGnum') %>% as.matrix()
+
+colors <- rep('black', ncol(poly_met))
+colors[grepl('winter',colnames(poly_met))] = 'red'
+
+heatmap.2(poly_met, trace = 'none',  col = colorRampPalette(brewer.pal(11, 'Spectral'))(1000), colCol = colors, margins  = c (8,8))
+
+```

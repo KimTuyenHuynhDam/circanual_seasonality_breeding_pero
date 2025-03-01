@@ -1,0 +1,54 @@
+---
+title: "correlation of DNAm age vs biological age -birthseason"
+author: "Kim-Tuyen Huynh-Dam"
+date: "2023-11-20"
+output: html_document
+---
+
+```{r, message=FALSE, echo=TRUE, warning=FALSE}
+library(readxl)
+library(dplyr)
+
+df = read_excel('all tails -summer, winter age.xlsx')
+
+df_win = df %>% filter(BirthSeason == "winter")
+df_sum = df %>% filter(BirthSeason == "summer")
+plot(df$Age, df$DNAmAgeLOO, xlab ='Age', ylab='DNAmAgeLOO', col = ifelse(df$BirthSeason == 'winter', 'red', 'blue'), xlim =c(0,3.5), ylim =c(0,3))
+abline(lm(df$DNAmAgeLOO ~ df$Age), col = 'black', lwd=3)
+abline(lm(df_win$DNAmAgeLOO ~ df_win$Age), col = 'red', lwd=3)
+abline(lm(df_sum$DNAmAgeLOO ~ df_sum$Age), col = 'blue', lwd=3)
+round(cor(df$Age, df$DNAmAgeLOO), 2)
+round(cor(df_win$Age, df_win$DNAmAgeLOO), 2)
+round(cor(df_sum$Age, df_sum$DNAmAgeLOO), 2)
+
+
+###Polygmous = winter and summer
+
+poly = df %>% filter(Monogamous == 'no')
+poly_sum = df %>% filter(BirthSeason == "summer" & Monogamous == 'no')
+poly_win = df %>% filter(BirthSeason == "winter" & Monogamous == 'no')
+
+plot(poly$Age, poly$DNAmAgeLOO, xlab ='Age', ylab='DNAmAgeLOO', col = ifelse(poly$BirthSeason == 'winter', 'red', 'blue'), xlim =c(0,3.5), ylim =c(0,3))
+abline(lm(poly$DNAmAgeLOO ~ poly$Age), col = 'black', lwd=3)
+abline(lm(poly_win$DNAmAgeLOO ~ poly_win$Age), col = 'red', lwd=3)
+abline(lm(poly_sum$DNAmAgeLOO ~ poly_sum$Age), col = 'blue', lwd=3)
+
+round(cor(poly$Age, poly$DNAmAgeLOO), 2)
+round(cor(poly_win$Age, poly_win$DNAmAgeLOO), 2)
+round(cor(poly_sum$Age, poly_sum$DNAmAgeLOO), 2)
+
+
+###Monogmous = winter and summer
+
+mono = df %>% filter(Monogamous == 'yes')
+mono_sum = df %>% filter(BirthSeason == "summer" & Monogamous == 'yes')
+mono_win = df %>% filter(BirthSeason == "winter" & Monogamous == 'yes')
+
+plot(mono$Age, mono$DNAmAgeLOO, xlab ='Age', ylab='DNAmAgeLOO', col = ifelse(mono$BirthSeason == 'winter', 'red', 'blue'), xlim =c(0,3.5), ylim =c(0,2.5))
+abline(lm(mono$DNAmAgeLOO ~ mono$Age), col = 'black', lwd=3)
+abline(lm(mono_win$DNAmAgeLOO ~ mono_win$Age), col = 'red', lwd=3)
+abline(lm(mono_sum$DNAmAgeLOO ~ mono_sum$Age), col = 'blue', lwd=3)
+round(cor(mono$Age, mono$DNAmAgeLOO), 2)
+round(cor(mono_sum$Age, mono_sum$DNAmAgeLOO), 2)
+round(cor(mono_win$Age, mono_win$DNAmAgeLOO), 2)
+```

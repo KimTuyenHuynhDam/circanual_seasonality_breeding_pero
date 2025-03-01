@@ -1,0 +1,25 @@
+---
+title: "heatmap of top CpGs in monogamous species"
+author: "Kim-Tuyen Huynh-Dam"
+date: "2023-11-20"
+output: html_document
+
+```{r, message=FALSE, echo=TRUE, warning=FALSE}
+library(tidyverse)
+library(ggplot2)
+library(RColorBrewer)
+library(gplots)
+library(readxl)
+
+met = read_xlsx("ProMet of mono (logp 3)  in all tails -winter collection.xlsx")
+
+
+mono_met = met %>% select(matches("CG|EP|PO|IS")) 
+mono_met = mono_met%>% column_to_rownames(var='CGnum') %>% as.matrix()
+
+colors <- rep('black', ncol(mono_met))
+colors[grepl('winter',colnames(mono_met))] = 'red'
+
+heatmap.2(mono_met, trace = 'none',  col = colorRampPalette(brewer.pal(11, 'Spectral'))(1000), colCol = colors, margins  = c (8,8))
+
+```

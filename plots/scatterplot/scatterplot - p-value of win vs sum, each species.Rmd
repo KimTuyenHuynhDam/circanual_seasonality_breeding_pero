@@ -1,0 +1,46 @@
+---
+title: "scatterplot - p-value of win vs sum, each species"
+author: "Kim-Tuyen Huynh-Dam"
+date: "2023-11-20"
+output: html_document
+---
+
+```{r, message=FALSE, echo=TRUE, warning=FALSE}
+library(readxl)
+library(dplyr)
+library(lubridate)
+library(tidyverse)
+library(broom)
+library(tibble)
+
+
+met = read_xlsx("all CpGs - win vs sum -each  species - winter collection.xlsx")
+
+####top 10% of most significant CpGs
+
+met_10percent = met[1:round(nrow(met)*0.1,0),]
+
+ggplot(data=met_10percent, aes(x=CGnum, y=BW)) + geom_point(size=0.5,aes(col ='Polygamous - BW')) +
+  geom_point(size=0.5,aes(x=CGnum, y=SM2, col='Polygamous - SM2')) +
+  geom_point(size=0.5,aes(x=CGnum, y=LL, col='Polygamous - LL')) +
+  geom_point(size=0.5,aes(x=CGnum, y=PO, col='Monogamous - PO')) +
+  geom_point(size=0.5,aes(x=CGnum, y=EP, col='Monogamous - EP')) +
+  geom_point(size=0.5,aes(x=CGnum, y=IS, col='Monogamous - IS')) +
+  xlab('') + ylab('-Log10(p value)') +  theme_minimal() +
+  scale_color_manual(name='Species', values = c("black","orange", 'purple', 'red','green', 'blue')) +
+  theme(axis.text.x=element_blank(),axis.ticks.x=element_blank())
+
+####top 250 of most significant CpGs
+
+met_250 = met[1:250,]
+
+ggplot(data=met_250, aes(x=CGnum, y=BW)) + geom_point(size=0.5,aes(col ='Polygamous - BW')) +
+  geom_point(size=0.5,aes(x=CGnum, y=SM2, col='Polygamous - SM2')) +
+  geom_point(size=0.5,aes(x=CGnum, y=LL, col='Polygamous - LL')) +
+  geom_point(size=0.5,aes(x=CGnum, y=PO, col='Monogamous - PO')) +
+  geom_point(size=0.5,aes(x=CGnum, y=EP, col='Monogamous - EP')) +
+  geom_point(size=0.5,aes(x=CGnum, y=IS, col='Monogamous - IS')) +
+  xlab('') + ylab('-Log10(p value)') +  theme_minimal() +
+  scale_color_manual(name='Species', values = c("black","orange", 'purple', 'red','green', 'blue')) +
+  theme(axis.text.x=element_blank(),axis.ticks.x=element_blank())
+```
