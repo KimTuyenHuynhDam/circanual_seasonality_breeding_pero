@@ -109,7 +109,7 @@ for ( species in all_stock) {
                             min(merged_df2$BirthYear, na.rm = TRUE) +1))
   
   
-  max_year <- ifelse(species == "SM2", 2016, 2024)
+  max_year <- ifelse(species == "SM2", 2017, 2024)
   
   
   Dam_winter_Sire_winter <- prepare_dataset(merged_df2, winter_months, winter_months, min_year, max_year)
@@ -146,6 +146,7 @@ for ( species in all_stock) {
     
     # Generate year intervals within min_year and max_year
     year_intervals <- seq(from = min_year, to = max_year, by = year_interval)
+    
     
     # Generate labels for each interval
     interval_labels <- sapply(1:(length(year_intervals)-1), function(i) {
