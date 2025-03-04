@@ -72,9 +72,9 @@ write.xlsx(BW_scan, './data/BWanno - CpGs - sin, cos - circannual birthmonth - p
 
 ########## select top CpGs with p-value and FDR < 0.1
 
-#top_cpg = myscan %>% filter(p < 0.05 & fdr < 0.1) 
+top_cpg = myscan %>% filter(p < 0.05 & fdr < 0.1) 
 
-top_cpg = myscan %>% filter(p < 0.05 & fdr < 0.2) 
+
 
 nrow(top_cpg)
 
