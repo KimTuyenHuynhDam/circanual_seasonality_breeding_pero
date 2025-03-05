@@ -106,10 +106,10 @@ for ( species in all_stock) {
   
   min_year <- ifelse(species == "SM2", 2002,
                      ifelse(species == "LL", 1988, 
-                            min(merged_df2$BirthYear, na.rm = TRUE) +1))
+                            min(merged_df2$BirthYear, na.rm = TRUE)))
   
   
-  max_year <- ifelse(species == "SM2", 2017, 2024)
+  max_year <- ifelse(species == "SM2", 2017, 2023)
   
   
   Dam_winter_Sire_winter <- prepare_dataset(merged_df2, winter_months, winter_months, min_year, max_year)

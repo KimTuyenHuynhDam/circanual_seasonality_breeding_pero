@@ -113,10 +113,10 @@ for ( species in all_stock) {
   
   min_year <- ifelse(species == "SM2", 2002,
                      ifelse(species == "LL", 1988, 
-                            min(merged_df2$BirthYear, na.rm = TRUE) +1))
+                            min(merged_df2$BirthYear, na.rm = TRUE)))
   
   
-  max_year <- ifelse(species == "SM2", 2016, 2024)
+  max_year <- ifelse(species == "SM2", 2016, 2022)
   
   
   all_mice <- prepare_dataset(merged_df2, min_year, max_year)
@@ -181,7 +181,7 @@ for ( species in all_stock) {
       # Extract end year from YearGroup and filter out invalid intervals
       result_counts <- result_counts %>%
         mutate(YearGroupEnd = as.numeric(str_extract(YearGroup, "\\d+$"))) %>%
-        filter(YearGroupEnd <= 2024 & YearGroupEnd >= min_year & YearGroupEnd <= max_year) %>%
+        filter(YearGroupEnd <= 2022 & YearGroupEnd >= min_year & YearGroupEnd <= max_year) %>%
         select(-YearGroupEnd)  # Remove temporary column
       
       # Skip exporting if result_counts is empty

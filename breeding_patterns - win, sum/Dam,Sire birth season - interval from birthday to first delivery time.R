@@ -75,7 +75,11 @@ for ( species in all_stock) {
     rename(Birthday_Sire = Birthday, BirthMonth_Sire = BirthMonth, BirthYear_Sire = BirthYear)
   
   
-  merged_df2 <- merged_df %>%  
+  min_year <- ifelse(species == "SM2", 2002,
+                     ifelse(species == "LL", 1988, 
+                            min(merged_df2$BirthYear, na.rm = TRUE)))
+  
+  merged_df2 <- merged_df %>%  filter(BirthYear >= min_year) %>%
     left_join(dam_info, by = c("Dam" = "ID")) %>%
     left_join(sire_info, by = c("Sire" = "ID"))  %>%
     mutate(
@@ -109,7 +113,10 @@ for ( species in all_stock) {
   }
   
 
-  max_year <- 2024  
+  
+  
+  
+  max_year <- ifelse(species == "SM2", 2016, 2022)
   
  
   dam_winter <- calculate_min_interval(merged_df2, winter_months, "Dam", max_year)

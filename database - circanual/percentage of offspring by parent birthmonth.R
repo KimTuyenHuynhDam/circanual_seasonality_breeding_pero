@@ -55,10 +55,16 @@ for ( species in all_stock) {
     select(ID, Birthday, BirthMonth, BirthYear) %>%
     rename(Birthday_Sire = Birthday, BirthMonth_Sire = BirthMonth, BirthYear_Sire = BirthYear)
   
-  merged_df2 <- merged_df %>%  
+  start_year <- ifelse(species == "SM2", 2002,
+                       ifelse(species == "LL", 1988, 
+                              min(merged_df$BirthYear, na.rm = TRUE)))
+  
+  end_year <- ifelse(species == "SM2", 2016, 2022)
+  
+  merged_df2 <- merged_df %>%  filter(BirthYear >= start_year & BirthYear <= end_year ) %>%  
     left_join(dam_info, by = c("Dam" = "ID")) %>%
     left_join(sire_info, by = c("Sire" = "ID")) %>%
-    filter(!is.na(Birthday), !is.na(Birthday_Sire), !is.na(Birthday_Dam))
+    filter(!is.na(Birthday), !is.na(Birthday_Sire), !is.na(Birthday_Dam)) %>% distinct()
   
   process_parent <- function(data, parent) {
     data %>% 
@@ -71,16 +77,16 @@ for ( species in all_stock) {
       select(-one_year_later)
   }
   
-  summarize_by_birthmonth_5_year_interval_to_excel <- function(data, parent_type) {
+  summarize_by_birthmonth_5_year_interval_to_excel <- function(data, parent_type, min_year, max_year) {
     birth_year_col <- paste0("BirthYear_", parent_type)
     birth_month_col <- paste0("BirthMonth_", parent_type)
     
     results <- list()
     
-    seq_interval_start <- seq(min(data[[birth_year_col]]), max(data[[birth_year_col]]), by = 5)
-    
-    # Ensure we do not include intervals beyond 2024
-    seq_interval_start <- seq_interval_start[seq_interval_start + 4 <= 2024]
+    #seq_interval_start <- seq(min(data[[birth_year_col]]), max(data[[birth_year_col]]), by = 5)
+    seq_interval_start <- seq(min_year, max_year, by = 5)
+    # Ensure we do not include intervals beyond end_year
+    seq_interval_start <- seq_interval_start[seq_interval_start + 4 <= max_year]
     
     for (interval_start in seq_interval_start) {
       interval_end <- interval_start + 4  
@@ -130,7 +136,7 @@ for ( species in all_stock) {
   for (parent in parents) {
     full_1_year <- process_parent(merged_df2, parent)
     
-    summarize_by_birthmonth = summarize_by_birthmonth_5_year_interval_to_excel(full_1_year, parent)
+    summarize_by_birthmonth = summarize_by_birthmonth_5_year_interval_to_excel(full_1_year, parent, start_year, end_year)
     
     data = ensure_continuous_birthmonth(summarize_by_birthmonth, parent) 
     data2 = data %>%  select(-ncol(.)) 

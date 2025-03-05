@@ -132,9 +132,17 @@ for ( species in all_stock) {
   wb <- createWorkbook()
   
   year_intervals <- c(3)
-  min_year <- ifelse(species == "SM2", min(merged_df2$BirthYear, na.rm = TRUE) + 2, min(merged_df2$BirthYear, na.rm = TRUE))
-  #max_year <- max(merged_df2$BirthYear, na.rm = TRUE)  
-  max_year <- 2024
+  
+  min_year <- ifelse(species == "SM2", 2002,
+                     ifelse(species == "LL", 1988, 
+                            min(merged_df2$BirthYear, na.rm = TRUE)))
+  
+  
+  max_year <- ifelse(species == "SM2", 2016, 2022)
+  
+  
+  
+  
   for (interval in year_intervals) {
     for (season in c("winter", "summer", "all")) {
       counts <- calculate_counts(merged_df2, interval, season, max_year)

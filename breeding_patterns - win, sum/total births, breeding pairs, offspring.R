@@ -39,9 +39,9 @@ for (species in all_stock) {
   
   start_year <- ifelse(species == "SM2", 2002,
                      ifelse(species == "LL", 1988, 
-                            min(year(IND$Birthday), na.rm = TRUE) + 1))
+                            min(year(IND$Birthday), na.rm = TRUE)))
   
-  end_year <- ifelse(species == "SM2", 2016, 2024)
+  end_year <- ifelse(species == "SM2", 2016, 2022)
   
  
   # Calculate total births for the period

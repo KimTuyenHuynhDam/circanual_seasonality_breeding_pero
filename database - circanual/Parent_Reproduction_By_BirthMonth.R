@@ -63,10 +63,12 @@ for ( species in all_stock) {
     select(ID, Birthday, BirthMonth, BirthYear) %>%
     rename(Birthday_Sire = Birthday, BirthMonth_Sire = BirthMonth, BirthYear_Sire = BirthYear)
   
-  merged_df2 <- merged_df %>%  
-    left_join(dam_info, by = c("Dam" = "ID")) %>%
+  cut_off_birthyear <- ifelse(species == "SM2", 2016, 2022)
+  
+  merged_df2 <- merged_df %>%  filter(BirthYear <= cut_off_birthyear ) %>% 
+     left_join(dam_info, by = c("Dam" = "ID")) %>%
     left_join(sire_info, by = c("Sire" = "ID")) %>%
-    filter(!is.na(Birthday), !is.na(Birthday_Sire), !is.na(Birthday_Dam))
+    filter(!is.na(Birthday), !is.na(Birthday_Sire), !is.na(Birthday_Dam)) %>% distinct()
   
   count_reproducing_parents_by_birthmonth <- function(data, parent_type, species) {
     parent_id_col <- ifelse(parent_type == "Dam", "Dam", "Sire")

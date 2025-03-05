@@ -73,11 +73,16 @@ for ( species in all_stock) {
     select(ID, Birthday, BirthMonth, BirthYear) %>%
     rename(Birthday_Sire = Birthday, BirthMonth_Sire = BirthMonth, BirthYear_Sire = BirthYear)
   
+  start_year <- ifelse(species == "SM2", 2002,
+                       ifelse(species == "LL", 1988, 
+                              min(merged_df$BirthYear, na.rm = TRUE)))
   
-  merged_df2 <- merged_df %>%  
+  end_year <- ifelse(species == "SM2", 2016, 2022)
+  
+  merged_df2 <- merged_df %>%  filter(BirthYear >= start_year & BirthYear <= end_year+1 ) %>%  
     left_join(dam_info, by = c("Dam" = "ID")) %>%
     left_join(sire_info, by = c("Sire" = "ID")) %>%
-    filter(!is.na(Birthday), !is.na(Birthday_Sire), !is.na(Birthday_Dam))
+    filter(!is.na(Birthday), !is.na(Birthday_Sire), !is.na(Birthday_Dam)) %>% distinct()
   
   #############
   # Function to process each sire or dam
@@ -96,7 +101,7 @@ for ( species in all_stock) {
   ##########################
   # Function to summarize data by birth month over 5-year intervals and write to Excel
   
-  summarize_by_birthmonth_5_year_interval_to_excel <- function(data, parent_type) {
+  summarize_by_birthmonth_5_year_interval_to_excel <- function(data, parent_type, min_year, max_year) {
     birth_year_col <- paste0("BirthYear_", parent_type)
     birth_month_col <- paste0("BirthMonth_", parent_type)
     
@@ -104,12 +109,14 @@ for ( species in all_stock) {
     results <- list()
     
     # Calculate intervals based on the range of years in the dataset, divided into 5-year segments
-    seq_interval_start <- seq(min(data[[birth_year_col]]), max(data[[birth_year_col]]), by = 5)
+    seq_interval_start <- seq(min_year, max_year, by = 5)
     
-    # Determine the maximum year in the dataset for comparison
-    max_year <- max(data[[birth_year_col]])
+    # Ensure we do not include intervals beyond end_year
+    seq_interval_start <- seq_interval_start[seq_interval_start + 4 <= max_year]
+    
     
     # Iterate over each interval
+    
     for (interval_start in seq_interval_start) {
       interval_end <- interval_start + 4  # Define the end of the interval
       
@@ -166,8 +173,7 @@ for ( species in all_stock) {
     
     #write_xlsx(completed_data, output_file_path)
   }
-  parent = 'Dam'
-  
+ 
   parents = c('Sire','Dam')
   
   for (parent in parents) {
@@ -175,7 +181,7 @@ for ( species in all_stock) {
     
     #write.xlsx(full_1_year, paste0(species,'-',parent,'- all mice born for 1 year from 1st delivery.xlsx'))
     
-    summarize_by_birthmonth = summarize_by_birthmonth_5_year_interval_to_excel(full_1_year, parent)
+    summarize_by_birthmonth = summarize_by_birthmonth_5_year_interval_to_excel(full_1_year, parent, start_year, end_year)
     
     #output_file_path = paste0(species,"-",parent,"_by_birthmonth_5_year_interval.xlsx")
     

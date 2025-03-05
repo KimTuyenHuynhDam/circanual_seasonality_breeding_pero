@@ -108,11 +108,14 @@ for ( species in all_stock) {
   # Calculate the overall min and max BirthYear
   
   min_year <- ifelse(species == "SM2", 2002,
-                     ifelse(species == "LL", 1988, 
-                     min(merged_df2$BirthYear, na.rm = TRUE) +1))
+                     #min(merged_df2$BirthYear, na.rm = TRUE)+1)
+                     
+                     
+                    ifelse(species == "LL", 1988, 
+                    min(merged_df2$BirthYear, na.rm = TRUE)))
   
 
-  max_year <- ifelse(species == "SM2", 2016, 2024)
+  max_year <- ifelse(species == "SM2", 2017, 2023)
                      
   
   Dam_winter_Sire_winter <- prepare_dataset(merged_df2, winter_months, winter_months, min_year, max_year)
@@ -188,10 +191,10 @@ for ( species in all_stock) {
       # Calculate seasonal births
       result_counts <- calculate_seasonal_births_adjusted(data_table, winter_months, summer_months, year_interval)
       
-      # Remove intervals exceeding 2024
+      # Remove intervals exceeding 2022
       result_counts <- result_counts %>%
         mutate(YearGroupEnd = as.numeric(str_extract(YearGroup, "\\d+$"))) %>%
-        filter(YearGroupEnd <= 2024) %>%
+        filter(YearGroupEnd <= 2022) %>%
         select(-YearGroupEnd)
       
       # Skip exporting if empty
@@ -227,7 +230,7 @@ for ( species in all_stock) {
     year_interval <- 4
   } else if (species == "SM2") {
     year_interval <- 3
-  } else if (species %in% c("BW", "LL", "PO")) {
+  } else if (species %in% c("BW", "PO", "LL")) {
     year_interval <- 5
   } else {
     stop("Unknown species: ", species)  # Safety check
