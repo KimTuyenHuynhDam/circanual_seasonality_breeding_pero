@@ -41,7 +41,7 @@ for (species in all_stock) {
                      ifelse(species == "LL", 1988, 
                             min(year(IND$Birthday), na.rm = TRUE)))
   
-  end_year <- ifelse(species == "SM2", 2016, 2022)
+  end_year <- ifelse(species == "SM2", 2017, 2023)
   
  
   # Calculate total births for the period
@@ -62,7 +62,7 @@ for (species in all_stock) {
     summarise(TotalOffspring = n()) %>%
     pull(TotalOffspring)
   
-  period_description <- paste(start_year, "to", end_year)
+  period_description <- paste(start_year, "-", end_year)
   
   summary_df <- summary_df %>%
     bind_rows(data.frame(
