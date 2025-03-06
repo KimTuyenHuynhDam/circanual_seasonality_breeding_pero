@@ -71,7 +71,7 @@ for ( species in all_stock) {
     select(ID, Birthday, BirthMonth, BirthYear) %>%
     rename(Birthday_Sire = Birthday, BirthMonth_Sire = BirthMonth, BirthYear_Sire = BirthYear)
   
-  # Calculate the overall min and max BirthYear
+
   
   min_year <- ifelse(species == "SM2", 2002,
                      ifelse(species == "LL", 1988, 
@@ -150,7 +150,7 @@ for ( species in all_stock) {
                    names_prefix = "Y", names_transform = list(Year = as.integer)) %>%
       filter(Count > 0) 
     
-    year_intervals <- seq(from = min_year, to = max_year + year_interval, by = year_interval)
+    year_intervals <- seq(from = min_year, to = max_year-1 + year_interval, by = year_interval)
     
     interval_labels <- sapply(1:(length(year_intervals)-1), function(i) {
       paste(year_intervals[i], year_intervals[i+1]-1, sep = "-")

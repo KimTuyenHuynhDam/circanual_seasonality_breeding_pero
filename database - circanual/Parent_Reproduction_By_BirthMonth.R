@@ -63,23 +63,26 @@ for ( species in all_stock) {
     select(ID, Birthday, BirthMonth, BirthYear) %>%
     rename(Birthday_Sire = Birthday, BirthMonth_Sire = BirthMonth, BirthYear_Sire = BirthYear)
   
-  cut_off_birthyear <- ifelse(species == "SM2", 2016, 2022)
   
-  merged_df2 <- merged_df %>%  filter(BirthYear <= cut_off_birthyear ) %>% 
+  min_year <- ifelse(species == "SM2", 2002,
+                     ifelse(species == "LL", 1988, 
+                            min(merged_df$BirthYear, na.rm = TRUE)))
+  
+  max_year <- ifelse(species == "SM2", 2017, 2023)
+  
+  merged_df2 <- merged_df %>%  filter(BirthYear >= min_year & BirthYear <= max_year) %>%
      left_join(dam_info, by = c("Dam" = "ID")) %>%
     left_join(sire_info, by = c("Sire" = "ID")) %>%
     filter(!is.na(Birthday), !is.na(Birthday_Sire), !is.na(Birthday_Dam)) %>% distinct()
   
-  count_reproducing_parents_by_birthmonth <- function(data, parent_type, species) {
+  count_reproducing_parents_by_birthmonth <- function(data, parent_type, species, min_year,max_year) {
     parent_id_col <- ifelse(parent_type == "Dam", "Dam", "Sire")
     birth_month_col <- paste0("BirthMonth_", parent_type)
     birth_year_col <- paste0("BirthYear_", parent_type)
     
-    min_year <- min(data[[birth_year_col]])
-    max_year <- max(data[[birth_year_col]])
-    
-    seq_interval_start <- seq(min_year, max_year, by = 5)
-    seq_interval_start <- seq_interval_start[seq_interval_start + 4 <= 2024]
+   
+    seq_interval_start <- seq(min_year, max_year-1, by = 5)
+    seq_interval_start <- seq_interval_start[seq_interval_start + 4 <= 2022]
     
     results <- list()
     
@@ -105,7 +108,7 @@ for ( species in all_stock) {
   parents = c('Sire','Dam')
   
   for (parent in parents) {
-    repro_by_birthmonth = count_reproducing_parents_by_birthmonth(merged_df2, parent, species)
+    repro_by_birthmonth = count_reproducing_parents_by_birthmonth(merged_df2, parent, species, min_year, max_year)
     
     if (parent == "Dam") {
       dam_repro_by_birthmonth_list[[species]] <- repro_by_birthmonth

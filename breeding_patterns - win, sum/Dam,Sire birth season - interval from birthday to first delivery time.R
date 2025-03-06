@@ -75,9 +75,13 @@ for ( species in all_stock) {
     rename(Birthday_Sire = Birthday, BirthMonth_Sire = BirthMonth, BirthYear_Sire = BirthYear)
   
   
+  
   min_year <- ifelse(species == "SM2", 2002,
-                     ifelse(species == "LL", 1988, 
-                            min(merged_df2$BirthYear, na.rm = TRUE)))
+                       ifelse(species == "LL", 1988, 
+                              min(year(IND$Birthday), na.rm = TRUE)))
+  
+  max_year <- ifelse(species == "SM2", 2017, 2023)
+  
   
   merged_df2 <- merged_df %>%  filter(BirthYear >= min_year) %>%
     left_join(dam_info, by = c("Dam" = "ID")) %>%
@@ -115,14 +119,11 @@ for ( species in all_stock) {
 
   
   
-  
-  max_year <- ifelse(species == "SM2", 2016, 2022)
-  
  
-  dam_winter <- calculate_min_interval(merged_df2, winter_months, "Dam", max_year)
-  sire_winter <- calculate_min_interval(merged_df2, winter_months, "Sire", max_year)
-  dam_summer <- calculate_min_interval(merged_df2, summer_months, "Dam", max_year)
-  sire_summer <- calculate_min_interval(merged_df2, summer_months, "Sire", max_year)
+  dam_winter <- calculate_min_interval(merged_df2, winter_months, "Dam", max_year-1)
+  sire_winter <- calculate_min_interval(merged_df2, winter_months, "Sire", max_year-1)
+  dam_summer <- calculate_min_interval(merged_df2, summer_months, "Dam", max_year-1)
+  sire_summer <- calculate_min_interval(merged_df2, summer_months, "Sire", max_year-1)
   
  
   wb <- createWorkbook()

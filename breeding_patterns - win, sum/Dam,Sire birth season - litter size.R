@@ -85,7 +85,7 @@ for ( species in all_stock) {
                      ifelse(species == "LL", 1988, 
                             min(merged_df2$BirthYear, na.rm = TRUE)))
   
-  max_year <- ifelse(species == "SM2", 2016, 2022)
+  max_year <- ifelse(species == "SM2", 2017, 2023)
   
   merged_df2 <- merged_df2 %>%
     filter(BirthYear >= min_year & BirthYear <= max_year)  
@@ -100,7 +100,7 @@ for ( species in all_stock) {
   
   # Calculate litter sizes for different scenarios
   calculate_litter_sizes <- function(data, dam_months, sire_months,offspring_months ) {
-    data %>%
+    data %>%  filter(BirthYear >= min_year & BirthYear <= max_year)   %>%
       filter(BirthMonth_Dam %in% dam_months, BirthMonth_Sire %in% sire_months) %>%
       group_by(BirthYear, BirthMonth, Birthday, MatingNumber) %>%
       summarise(litter_size = n(), .groups = 'drop') %>%
