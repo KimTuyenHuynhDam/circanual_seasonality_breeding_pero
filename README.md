@@ -39,7 +39,7 @@ Used for visualizations and GAM/SINE-based circannual trend modeling:
 ---
 ## 📎 Citation
 
-Citation will be provided upon publication.
+Huynh-Dam, KT., Jaeger, C., Naderi, A. et al. Circannual breeding and methylation are impacted by the equinox in Peromyscus. BMC Biol 23, 149 (2025). https://doi.org/10.1186/s12915-025-02251-6
 
 ## 🔗 License
 
